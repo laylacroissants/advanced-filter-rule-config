@@ -1,0 +1,21 @@
+:host ::ng-deep {
+    .p-card {
+        margin-right: 100px;
+    } 
+}
+.rule-form {
+    margin: 50px 0px 0px 400px
+}
+.sub-rule-field {
+    display: flex;
+}
+.range-inputs > div, .single-input {
+    display: flex;
+    flex-direction: column; /* Aligns the label on top of the input */
+    margin-right: 20px; /* Adds spacing between the range inputs */
+}
+  
+.range-inputs {
+    display: flex;
+    flex-direction: row; /* Positions the range inputs side by side */
+}

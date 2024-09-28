@@ -1,0 +1,21 @@
+<form style="margin-left: 450px;" [formGroup]="fieldForm">
+    <label for="fieldName">Field Name</label>
+    <input type="text" formControlName="fieldName" placeholder="Enter field name" />
+  
+    <label for="fieldType">Field Type</label>
+    <select formControlName="fieldType">
+      <option value="text">Text</option>
+      <option value="number">Number</option>
+      <option value="boolean">Boolean</option>
+    </select>
+  
+    <p-button [label]="selectedFieldIndex !== null ? 'Save Field' : 'Add Field'" (click)="saveField()"></p-button>
+    <p-button label="Back to Filter Rule Creation"(click)="cancel()"></p-button>
+</form>
+
+<p-dialog header="Warning" [(visible)]="displayWarning" modal="modal" [closable]="false" [dismissableMask]="true">
+    <p>Field name already exists. Please choose a different name.</p>
+    <button pButton label="OK" (click)="closeWarning()"></button>
+</p-dialog>
+
+  

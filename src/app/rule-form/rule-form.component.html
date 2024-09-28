@@ -1,0 +1,118 @@
+<div class="rule-form" *ngIf="showForm">
+    <p-card class="rule-form-card" header="Create Filter" >
+        <form [formGroup]="ruleForm">
+        
+            <div class="filter-name flex flex-column">
+                <div class="flex"><label class="text-xs" for="name">Rule Name</label></div>
+                <div class="flex"><input pInputText formControlName="name"/></div>
+            </div>
+            <div class="pt-5" formArrayName="rules" *ngFor="let rule of rules.controls; let i = index">
+                <div [formGroupName]="i" class="sub-rule-card">
+                    <div class="sub-rule-field">
+
+                        <div class="flex flex-column pr-2">
+                            <div class="flex">
+                                <label class="text-xs" for="field-label">Field</label>
+                            </div>
+                            <div class="flex">
+                                <p-dropdown 
+                                    formControlName="field" 
+                                    [options]="fields" 
+                                    optionLabel="fieldName" 
+                                    (onChange)="onFieldChange(i)"
+                                    inputId="field-label"
+                                    styleClass="w-12rem">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                         
+                        <div class="flex flex-column pr-2">
+                            <div class="flex">
+                                <label class="text-xs" for="condition-label">Condition</label>
+                            </div>
+                            <div class="flex">
+                                <p-dropdown 
+                                    formControlName="condition" 
+                                    [options]="getConditionOptions(rule.get('fieldType')?.value)"
+                                    optionLabel="label"
+                                    optionValue="value"
+                                    placeholder="Select Condition"
+                                    [disabled]="rule.get('fieldType')?.value === 'boolean'"
+                                    styleClass="w-12rem"
+                                    inputId="condition-label">
+                                </p-dropdown>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-row flex-wrap" [ngSwitch]="rule.get('fieldType')?.value">
+                            <!-- Number Field Type -->
+                            <ng-container *ngSwitchCase="'number'">
+                                <div *ngIf="rule.get('condition')?.value === 'range'" class="range-inputs">
+                                  <div>
+                                    <label class="text-xs" for="startValue-label">From</label>    
+                                    <input pInputText formControlName="startValue" inputId="startValue-label"/>
+                                  </div>
+                                  <div>
+                                    <label class="text-xs" for="endValue-label">To</label>
+                                    <input pInputText formControlName="endValue" inputId="endValue-label"/>
+                                  </div>
+                                </div>
+                                <div *ngIf="rule.get('condition')?.value !== 'range'" class="single-input">
+                                  <label class="text-xs" for="value-label">Value</label>  
+                                  <input pInputText formControlName="value" inputId="value-label" />
+                                </div>
+                            </ng-container>
+                          
+                            <!-- Text Field Type -->
+                            <div *ngSwitchCase="'text'" class="flex flex-column">   
+                                <div class="flex"><label class="text-xs" for="value-label">Value</label></div>  
+                                <div class="flex"><input pInputText 
+                                    formControlName="value"
+                                    inputId="value-label" />
+                                </div>
+                            </div>
+                          
+                            <!-- Boolean Field Type -->
+                            <div *ngSwitchCase="'boolean'" class="flex flex-column">
+                                <div class="flex"><label class="text-xs" for="value-label">Value</label></div>
+                                <div class="flex">
+                                    <p-dropdown 
+                                        formControlName="value" 
+                                        [options]=booleanValues
+                                        optionLabel="label"
+                                        optionValue="value"
+                                        placeholder="Select Value"
+                                        styleClass="w-13rem"
+                                        inputId="value-label">
+                                    </p-dropdown>
+                                </div>
+                            </div>
+
+                            <div *ngSwitchDefault class="flex flex-column">
+                                <div class="flex"><label class="text-xs" for="value-label">Value</label></div>  
+                                <div class="flex"><input pInputText formControlName="value" inputId="value-label" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+
+                            <!-- Operator Selection -->
+                        <label for="operator">Operator</label>
+                        <select formControlName="operator">
+                            <option value="AND">AND</option>
+                            <option value="OR">OR</option>
+                        </select>
+
+                        <button type="button" (click)="deleteSubRule(i)">Delete Sub-rule</button>
+                </div>
+            </div>
+            <div>
+                <button type="button" (click)="addSubRule()">Add Sub-rule</button>
+                <button type="button" (click)="saveRule()">Save Rule</button>
+                <button type="button" (click)="clearRule()">Clear Rule</button>
+            </div>
+        </form>
+    </p-card>
+</div>
+  

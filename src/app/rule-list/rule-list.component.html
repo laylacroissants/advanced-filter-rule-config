@@ -1,0 +1,64 @@
+<p-sidebar position="left" 
+    [visible]="sideBarVisible" 
+    [dismissible]="false"
+    [modal]="false"
+    [showCloseIcon]="false"  >
+    <ng-template pTemplate="header">
+        <h3>Rule Creation</h3>
+    </ng-template>
+    <div class="rule-list">
+        <p-orderList
+        [value]="rules"
+        metaKeySelection="true"
+        [(selection)]="selectedRule"
+        (selectionChange)="onFilterRuleSelectionChange($event)" 
+        [listStyle]="{ 'max-height': '15rem' }" >
+
+        <ng-template pTemplate="header">
+            <div class="flex justify-content-between flex-wrap">
+                <div class="flex align-items-center justify-content-center"><h4 class="m-0">Filter Rules</h4></div>
+                <div class="flex align-items-center justify-content-center"><p-button icon="pi pi-plus" (click)="addNewRule()"></p-button></div>
+            </div>
+        </ng-template>
+            <ng-template let-rule pTemplate="item">
+                <div class="flex flex-wrap p-2 align-items-center gap-3">
+                    <div class="flex-1 flex flex-column gap-2">
+                        <span class="font-bold">{{ rule.name }}</span>
+                    </div>
+                </div>
+            </ng-template>
+        </p-orderList>
+    </div>
+    <div class="field-list">
+        <p-orderList
+          [value]="fields"
+          metaKeySelection="true"
+          [selection]="selectedField"
+          [listStyle]="{ 'max-height': '15rem' }"
+          (selectionChange)="onFieldRuleSelectionChange($event)">
+          
+          <ng-template pTemplate="header">
+            <div class="flex justify-content-between flex-wrap">
+                <div class="flex align-items-center justify-content-center"><h4 class="m-0">Fields</h4></div>
+                <div class="flex align-items-center justify-content-center"><p-button icon="pi pi-plus" (click)="addNewField()" styleClass="ml-2"></p-button></div> <!-- Use styleClass to add margin-left -->
+            </div>
+          </ng-template>
+      
+          <!-- Custom Item Template -->
+          <ng-template let-field pTemplate="item">
+            <div class="flex flex-wrap p-2 align-items-center gap-3">
+                <div class="flex-1 flex flex-column gap-2">
+                    <span class="font-bold">{{ field.fieldName }}</span>
+                    <div class="flex align-items-center gap-2">
+                        <i [ngClass]="getFieldClass(field.fieldType)"></i>
+                        <span>{{ field.fieldType }}</span>
+                    </div>
+                </div>
+              <!-- Remove Button for Each Field -->
+              <button pButton icon="pi pi-trash" (click)="removeField(field)" class="p-button-danger"></button>
+            </div>
+          </ng-template>
+      
+        </p-orderList>
+    </div>
+</p-sidebar>
