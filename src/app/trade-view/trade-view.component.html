@@ -1,0 +1,22 @@
+<app-rule-form [fields]="filterConfig"> </app-rule-form>
+<div style="margin-left: 400px; margin-top: 100px;">
+    <p-table [columns]="cols" [value]="tradeData" [tableStyle]="{'max-width': '70rem','max-height': '20rem'}">
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th *ngFor="let col of columns">
+                    {{ col.header }}
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr>
+                <td *ngFor="let col of columns">
+                    {{ rowData[col.field] }}
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+
+

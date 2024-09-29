@@ -21,7 +21,7 @@
                                     optionLabel="fieldName" 
                                     (onChange)="onFieldChange(i)"
                                     inputId="field-label"
-                                    styleClass="w-12rem">
+                                    styleClass="w-15rem">
                                 </p-dropdown>
                             </div>
                         </div>
@@ -38,7 +38,7 @@
                                     optionValue="value"
                                     placeholder="Select Condition"
                                     [disabled]="rule.get('fieldType')?.value === 'boolean'"
-                                    styleClass="w-12rem"
+                                    styleClass="w-15rem"
                                     inputId="condition-label">
                                 </p-dropdown>
                             </div>
@@ -82,7 +82,7 @@
                                         optionLabel="label"
                                         optionValue="value"
                                         placeholder="Select Value"
-                                        styleClass="w-13rem"
+                                        styleClass="w-15rem"
                                         inputId="value-label">
                                     </p-dropdown>
                                 </div>
@@ -94,6 +94,7 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="flex align-items-center pt-3 pl-3"><p-button icon="pi pi-trash" severity="danger" (click)="deleteSubRule(i)" /></div>
                     </div>
                 
 
@@ -104,7 +105,7 @@
                             <option value="OR">OR</option>
                         </select>
 
-                        <button type="button" (click)="deleteSubRule(i)">Delete Sub-rule</button>
+                        <!-- <button type="button" (click)="deleteSubRule(i)">Delete Sub-rule</button> -->
                 </div>
             </div>
             <div>

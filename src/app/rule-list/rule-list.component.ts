@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { RuleService } from '../services/rule.service';
 import { FieldService } from '../services/field.service';
 import { Subscription } from 'rxjs';
+import { Field, Rule } from '../model';
 
 @Component({
   selector: 'app-rule-list',
@@ -11,9 +12,9 @@ import { Subscription } from 'rxjs';
 export class RuleListComponent {
 
   sideBarVisible: boolean = true;
-  rules: any[] = [];
+  rules: Rule[] = [];
   selectedRule: any[] = []
-  fields: any[] = [];
+  fields: Field[] = [];
   selectedField: any[] = []
 
   private rulesSubscription: Subscription | undefined;

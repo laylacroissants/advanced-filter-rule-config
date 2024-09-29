@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { RuleService } from '../services/rule.service';
 import { Subscription } from 'rxjs';
 import { FieldService } from '../services/field.service';
-
+import { Field } from '../model';
 
 @Component({
   selector: 'app-rule-form',
@@ -11,8 +11,8 @@ import { FieldService } from '../services/field.service';
   styleUrls: ['./rule-form.component.scss']
 })
 export class RuleFormComponent implements OnInit {
+  @Input() fields: Field[] = [];
   ruleForm: FormGroup;
-  fields: any[] = []; // Store fields from FieldService
   private selectedRuleSubscription: Subscription | undefined;
   private fieldsSubscription: Subscription | undefined;
   ruleIndex: number | null = null;
@@ -58,10 +58,6 @@ export class RuleFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Subscribe to fields from FieldService
-    this.fieldsSubscription = this.fieldService.fields$.subscribe(fields => {
-      this.fields = fields;
-    });
 
     this.selectedRuleSubscription = this.ruleService.selectedRule$.subscribe(rule => {
       if (rule === null) {
@@ -135,7 +131,6 @@ export class RuleFormComponent implements OnInit {
       this.ruleService.saveRule(ruleFormValue);
     }
     this.ruleForm.reset();
-    this.showForm = false;
   }
 
 
