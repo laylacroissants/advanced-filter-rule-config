@@ -1,6 +1,7 @@
 import { Component, Injectable, Input, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { RuleService } from '../services/rule.service';
+import { MessageService } from 'primeng/api';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { FieldService } from '../services/field.service';
 import { Field, Rule } from '../model';
@@ -12,6 +13,7 @@ import { Field, Rule } from '../model';
   styleUrls: ['./rule-form.component.scss']
 })
 export class RuleFormComponent implements OnInit {
+
   @Input() fields: Field[] = [];
 
   ruleList: Rule[] = []
@@ -51,7 +53,8 @@ export class RuleFormComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder, 
-    private ruleService: RuleService, 
+    private ruleService: RuleService,
+    private messageService: MessageService 
   ) {
     this.ruleForm = this.fb.group({
       name: ['', Validators.required],
@@ -77,7 +80,6 @@ export class RuleFormComponent implements OnInit {
 
       // Loop through each sub-rule and add it to the form array
         rule.rules.forEach((subRule: any) => {
-          console.log(subRule.field)
           const subRuleForm = this.fb.group({
             field: [subRule.field, Validators.required],
             fieldType: [{ value: subRule.field.fieldType, disabled: true }, Validators.required],
@@ -95,17 +97,20 @@ export class RuleFormComponent implements OnInit {
   }
   ngOnDestroy() {}
   
-
   get rules(): FormArray {
     return this.ruleForm.get('rules') as FormArray;
+  }
+
+  applyFilter() {
+    console.log(this.selectedRule)
   }
 
   createSubRule(): FormGroup {
     return this.fb.group({
       field: ['', Validators.required],
-      fieldType: [{ value: '', disabled: true }, Validators.required], // Disabled because it will be auto-filled
+      fieldType: [{ value: '', disabled: true }, Validators.required], 
       condition: [''],
-      value: [''], // This will be used for single value conditions like "greater than" and "less than"
+      value: [''], 
       startValue: [''], // For range start
       endValue: [''], // For range end
       operator: ['AND']
@@ -148,17 +153,17 @@ export class RuleFormComponent implements OnInit {
       }
     });
 
-    if (this.ruleIndex !== null) {
-      console.log("this is updating")
+    if (this.ruleIndex !== null) { //update current selected rule
       this.ruleService.updateRule(this.ruleIndex, ruleFormValue);
       this.selectedRule = ruleFormValue;
-    } else { // very first one and new rule
-      console.log("this is a new rule or very furst one")
+      this.showSuccessUpdate()
+      
+    } else { // very first rule and new rule
       this.ruleService.saveRule(ruleFormValue);
       this.selectedRule = ruleFormValue; 
       this.ruleIndex = this.ruleList.length - 1
+      this.showSuccessSave()
     }
-
     this.showSaveDialog = false;  
   }
 
@@ -170,6 +175,13 @@ export class RuleFormComponent implements OnInit {
       this.selectedRule = undefined
       this.ruleIndex = null
     }
+  }
+
+  showSuccessSave() {
+    this.messageService.add({ severity: 'success', summary: 'Saved', detail: `Successfully Saved New Rule: ${this.ruleForm.get('name')?.value}`  });
+  }
+  showSuccessUpdate() {
+    this.messageService.add({ severity: 'info', summary: 'Updated', detail: `Successfully Updated Rule: ${this.ruleForm.get('name')?.value}`  });
   }
 
   onFieldChange(index: number) {

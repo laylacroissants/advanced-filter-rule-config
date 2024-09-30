@@ -9,19 +9,9 @@ import { FieldService } from './services/field.service';
 })
 export class AppComponent {
   title = 'filter-rule-config-application';
-  showFieldConfig: boolean = false;
-  showRuleForm: boolean = true;
-
-  constructor(private fieldService: FieldService) {}
+  constructor() {}
 
   ngOnInit(): void {
-    // Subscribe to visibility states
-    this.fieldService.showFieldConfig$.subscribe(visible => {
-      this.showFieldConfig = visible;
-    });
-
-    this.fieldService.showRuleForm$.subscribe(visible => {
-      this.showRuleForm = visible;
-    });
+    
   }
 }

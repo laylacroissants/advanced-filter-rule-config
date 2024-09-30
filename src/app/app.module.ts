@@ -24,6 +24,7 @@ import { FieldConfigComponent } from './field-config/field-config.component';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { SelectButtonModule } from 'primeng/selectbutton';
 
 
 @NgModule({
@@ -51,7 +52,8 @@ import { MessageService } from 'primeng/api';
     DropdownModule,
     CommonModule,
     FormsModule,
-    ToastModule
+    ToastModule,
+    SelectButtonModule 
   ],
   providers:[RuleService,MessageService],
   bootstrap: [AppComponent]

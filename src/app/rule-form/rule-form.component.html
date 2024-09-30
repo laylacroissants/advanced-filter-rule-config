@@ -1,6 +1,6 @@
 <p-toast></p-toast>
 <div class="rule-form">
-    <p-card class="rule-form-card">
+    <p-card class="rule-form-card" [style]="{ width: '75%' }">
         <div class="rule-dropdown-list">
             <p-dropdown 
                 [options]="ruleList" 
@@ -15,7 +15,6 @@
             <div class="pt-5" formArrayName="rules" *ngFor="let rule of rules.controls; let i = index">
                 <div [formGroupName]="i" class="sub-rule-card">
                     <div class="sub-rule-field">
-
                         <div class="flex flex-column pr-2">
                             <div class="flex">
                                 <label class="text-xs" for="field-label">Field</label>
@@ -27,7 +26,7 @@
                                     optionLabel="fieldName" 
                                     (onChange)="onFieldChange(i)"
                                     inputId="field-label"
-                                    styleClass="w-15rem">
+                                    styleClass="w-20rem">
                                 </p-dropdown>
                             </div>
                         </div>
@@ -44,7 +43,7 @@
                                     optionValue="value"
                                     placeholder="Select Condition"
                                     [disabled]="rule.get('fieldType')?.value === 'boolean'"
-                                    styleClass="w-15rem"
+                                    styleClass="w-20rem"
                                     inputId="condition-label">
                                 </p-dropdown>
                             </div>
@@ -65,7 +64,7 @@
                                 </div>
                                 <div *ngIf="rule.get('condition')?.value !== 'range'" class="single-input">
                                   <label class="text-xs" for="value-label">Value</label>  
-                                  <input pInputText formControlName="value" inputId="value-label" />
+                                  <input pInputText formControlName="value" inputId="value-label" styleClass="w-20rem" />
                                 </div>
                             </ng-container>
                           
@@ -74,7 +73,7 @@
                                 <div class="flex"><label class="text-xs" for="value-label">Value</label></div>  
                                 <div class="flex"><input pInputText 
                                     formControlName="value"
-                                    inputId="value-label" />
+                                    inputId="value-label" style="width: 20rem;" />
                                 </div>
                             </div>
                           
@@ -96,17 +95,20 @@
 
                             <div *ngSwitchDefault class="flex flex-column">
                                 <div class="flex"><label class="text-xs" for="value-label">Value</label></div>  
-                                <div class="flex"><input pInputText formControlName="value" inputId="value-label" />
+                                <div class="flex"><input pInputText formControlName="value" inputId="value-label"/>
                                 </div>
                             </div>
                         </div>
                         <div class="flex align-items-center pt-3 pl-3"><p-button icon="pi pi-trash" severity="danger" (click)="deleteSubRule(i)" /></div>
                     </div>      
-                        <label for="operator">Operator</label>
-                        <select formControlName="operator">
-                            <option value="AND">AND</option>
-                            <option value="OR">OR</option>
-                        </select>
+                    <div class="flex align-items-center justify-content-center p-2">
+                        <p-selectButton 
+                            [options]="operatorOptions" 
+                            formControlName="operator" 
+                            optionLabel="label" 
+                            optionValue="value" 
+                        />
+                    </div>    
                 </div>
             </div>
             <div class="card flex flex-wrap gap-3">
@@ -114,6 +116,7 @@
                 <p-button label="Save Rule" (click)="openSaveDialog()" severity="success" />
                 <p-button label="Save As" (click)="saveAsRule()" severity="secondary" />
                 <p-button label="Delete Rule" (click)="deleteRule()" severity="danger" />
+                <p-button label="Apply Filter" (click)="applyFilter()" severity="help"/>
             </div>
         </form>
     </p-card>

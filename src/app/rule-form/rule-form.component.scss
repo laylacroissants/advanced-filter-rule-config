@@ -2,6 +2,26 @@
     .p-card {
         margin-right: 100px;
     } 
+    /* Target the select button wrapper */
+    .p-selectbutton .p-button {
+        border-radius: 20px; /* Make the buttons rounder */
+        padding: 0.4rem 1rem; /* Smaller padding for smaller buttons */
+        font-size: 0.8rem; /* Smaller text size */
+        height: auto; /* Adjust height */
+        min-width: 60px; /* Set a minimum width */
+    }
+
+    .p-selectbutton .p-button.p-highlight {
+        background-color: #007ad9; /* Custom highlight color for the selected button */
+        color: white; /* White text color for the selected button */
+    }
+
+    /* Style for non-selected buttons */
+    .p-selectbutton .p-button:not(.p-highlight) {
+        background-color: #f1f1f1;
+        color: #333;
+        border-color: #ccc;
+    }
 }
 .rule-form {
     margin: 50px 0px 0px 400px
