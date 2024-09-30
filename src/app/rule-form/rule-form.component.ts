@@ -1,10 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Injectable, Input, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { RuleService } from '../services/rule.service';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { FieldService } from '../services/field.service';
-import { Field } from '../model';
+import { Field, Rule } from '../model';
 
+@Injectable()
 @Component({
   selector: 'app-rule-form',
   templateUrl: './rule-form.component.html',
@@ -12,11 +13,13 @@ import { Field } from '../model';
 })
 export class RuleFormComponent implements OnInit {
   @Input() fields: Field[] = [];
+
+  ruleList: Rule[] = []
+  selectedRule: Rule | undefined
   ruleForm: FormGroup;
-  private selectedRuleSubscription: Subscription | undefined;
-  private fieldsSubscription: Subscription | undefined;
   ruleIndex: number | null = null;
-  showForm: boolean = false;  // Track whether to show the form
+  showSaveDialog: boolean = false;
+  initialSelectedRule = new BehaviorSubject<any>(undefined)
 
   numberConditions = [
     { label: 'Is', value: 'is' },
@@ -49,7 +52,6 @@ export class RuleFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder, 
     private ruleService: RuleService, 
-    private fieldService: FieldService // Inject FieldService
   ) {
     this.ruleForm = this.fb.group({
       name: ['', Validators.required],
@@ -58,35 +60,41 @@ export class RuleFormComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.ruleForm.reset();
+    this.ruleService.rules$.subscribe(rules => {
+      this.ruleList = rules; // Update dropdown options when new rules are saved
+    });
 
-    this.selectedRuleSubscription = this.ruleService.selectedRule$.subscribe(rule => {
-      if (rule === null) {
-        this.showForm = true;
-        this.ruleForm.reset();
-        this.ruleIndex = null;
-        this.ruleForm.setControl('rules', this.fb.array([this.createSubRule()]));
-      } else if (rule) {
-        this.showForm = true;
-        this.ruleIndex = rule.index;
-        this.ruleForm.setControl('rules', this.fb.array([]));
-        this.ruleForm.patchValue({
-          name: rule.name
-        });
+    this.ruleForm.setControl('rules', this.fb.array([this.createSubRule()]));
+    // Subscribe to the selected rule observable
+    this.ruleService.selectedRule$.subscribe(rule => {
+      if (rule) {
+        this.ruleIndex = this.ruleList.findIndex(r => r === rule); 
+        this.selectedRule = rule
+        this.ruleForm.patchValue(rule);
+
+        this.rules.clear();
+
+      // Loop through each sub-rule and add it to the form array
         rule.rules.forEach((subRule: any) => {
-          this.rules.push(this.fb.group(subRule));
+          console.log(subRule.field)
+          const subRuleForm = this.fb.group({
+            field: [subRule.field, Validators.required],
+            fieldType: [{ value: subRule.field.fieldType, disabled: true }, Validators.required],
+            condition: [subRule.condition, Validators.required],
+            value: [subRule.value],
+            startValue: [subRule.startValue],
+            endValue: [subRule.endValue],
+            operator: [subRule.operator || 'AND', Validators.required]
+          });
+          this.rules.push(subRuleForm); // Add each sub-rule to the form array
         });
       }
     });
+    
   }
-
-  ngOnDestroy() {
-    if (this.selectedRuleSubscription) {
-      this.selectedRuleSubscription.unsubscribe();
-    }
-    if (this.fieldsSubscription) {
-      this.fieldsSubscription.unsubscribe();
-    }
-  }
+  ngOnDestroy() {}
+  
 
   get rules(): FormArray {
     return this.ruleForm.get('rules') as FormArray;
@@ -112,33 +120,55 @@ export class RuleFormComponent implements OnInit {
     this.rules.removeAt(index);
   }
 
+  openSaveDialog() {
+    this.showSaveDialog = true;
+  }
+
+  saveAsRule() {
+    this.ruleIndex = null
+    this.openSaveDialog()
+  }
+
   saveRule() {
+    if (this.ruleForm.invalid) {
+      // Prevent saving if the form is invalid
+      alert('Please enter a valid rule name.');
+      return;
+    }
+
     const ruleFormValue = this.ruleForm.value;
-  
+    
     // Temporarily enable fieldType controls to include their values in form value
     ruleFormValue.rules.forEach((subRule: any, index: number) => {
       const fieldTypeControl = this.rules.at(index).get('fieldType');
       if (fieldTypeControl) {
-        fieldTypeControl.enable({ emitEvent: false }); // Enable temporarily
-        subRule.fieldType = fieldTypeControl.value; // Manually set the value in form value
-        fieldTypeControl.disable({ emitEvent: false }); // Disable again to keep UI state
+        fieldTypeControl.enable({ emitEvent: false });
+        subRule.fieldType = fieldTypeControl.value; 
+        fieldTypeControl.disable({ emitEvent: false }); 
       }
     });
-  
+
     if (this.ruleIndex !== null) {
+      console.log("this is updating")
       this.ruleService.updateRule(this.ruleIndex, ruleFormValue);
-    } else {
+      this.selectedRule = ruleFormValue;
+    } else { // very first one and new rule
+      console.log("this is a new rule or very furst one")
       this.ruleService.saveRule(ruleFormValue);
+      this.selectedRule = ruleFormValue; 
+      this.ruleIndex = this.ruleList.length - 1
     }
-    this.ruleForm.reset();
+
+    this.showSaveDialog = false;  
   }
 
-
-  clearRule() {
+  deleteRule() {
     this.ruleForm.reset();
     this.ruleForm.setControl('rules', this.fb.array([this.createSubRule()]));
     if (this.ruleIndex !== null) {
       this.ruleService.clearRule(this.ruleIndex);
+      this.selectedRule = undefined
+      this.ruleIndex = null
     }
   }
 
@@ -149,6 +179,10 @@ export class RuleFormComponent implements OnInit {
       this.rules.at(index).get('fieldType')?.setValue(fieldType);
     }
   }
+  onRuleSelect(event: any) {
+    const selectedRule = event.value; 
+    this.ruleService.setSelectedRule(selectedRule);
+  }
 
   getConditionOptions(fieldType: string): any[] {
     if (fieldType === 'number') {
@@ -156,9 +190,9 @@ export class RuleFormComponent implements OnInit {
     } else if (fieldType === 'text') {
       return this.textConditions;
     } else if (fieldType === 'boolean') {
-      return []; // Empty array for boolean as no condition is needed
+      return []; 
     } else {
-      return this.defaultConditions; // Default conditions
+      return this.defaultConditions; 
     }
   }
 }
