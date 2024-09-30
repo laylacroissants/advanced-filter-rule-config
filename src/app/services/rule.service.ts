@@ -8,13 +8,17 @@ import { FormGroup } from '@angular/forms';
 export class RuleService {
   private ruleListSubject = new BehaviorSubject<any[]>([]);
   private selectedRuleSubject = new BehaviorSubject<any>(null);  // Add a selected rule BehaviorSubject
+  initialRuleSubject = new BehaviorSubject<any>(null);
   rules$ = this.ruleListSubject.asObservable();
   selectedRule$ = this.selectedRuleSubject.asObservable();  // Observable to listen for selected rule
+  initialRule$ = this.initialRuleSubject.asObservable()
 
   constructor() {
     const storedRules = localStorage.getItem('ruleList');
     if (storedRules) {
-      this.ruleListSubject.next(JSON.parse(storedRules));
+      const parsedStoredRules = JSON.parse(storedRules)
+      this.ruleListSubject.next(parsedStoredRules);
+      this.selectedRuleSubject.next(parsedStoredRules[0])
     }
   }
 
@@ -42,8 +46,7 @@ export class RuleService {
     localStorage.setItem('ruleList', JSON.stringify(rules));
   }
 
-  // New method to set the selected rule
   setSelectedRule(rule: any) {
-    this.selectedRuleSubject.next(rule);
+    this.selectedRuleSubject.next(rule); // Set the selected rule
   }
 }

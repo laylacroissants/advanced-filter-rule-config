@@ -5,6 +5,13 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class FieldService {
+  // private staticFields = [
+  //   { fieldName: 'Trade Number', fieldType: 'text', field: "tradeNumber" },
+  //   { fieldName: 'Portfolio', fieldType: 'text', field: "portfolio" },
+  //   { fieldName: 'Counterparty', fieldType: 'text', field: "counterparty" },
+  //   { fieldName: 'Price', fieldType: 'price', field: "price" }
+  // ];
+
   private fieldsSubject = new BehaviorSubject<any[]>([]);
   fields$ = this.fieldsSubject.asObservable();
 
@@ -19,10 +26,15 @@ export class FieldService {
   showRuleForm$ = this.showRuleFormSubject.asObservable();
 
   constructor() {
-    const storedFields = localStorage.getItem('fields');
-    if (storedFields) {
-      this.fieldsSubject.next(JSON.parse(storedFields));
-    }
+    // const storedFields = localStorage.getItem('fields');
+    // if (!storedFields) {
+    //   // Save static fields to localStorage
+    //   localStorage.setItem('fields', JSON.stringify(this.staticFields));
+    //   this.fieldsSubject.next(this.staticFields); // Set the initial fields from the static data
+    // } else {
+    //   // Load fields from localStorage if they already exist
+    //   this.fieldsSubject.next(JSON.parse(storedFields));
+    // }
   }
 
   getFields() {

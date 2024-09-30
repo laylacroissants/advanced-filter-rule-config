@@ -8,17 +8,23 @@ import { ButtonModule } from 'primeng/button';
 import { OrderListModule } from 'primeng/orderlist';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { DropdownModule } from 'primeng/dropdown';
+import { CardModule } from 'primeng/card';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
 
 import { AppComponent } from './app.component';
+import { TradeViewComponent } from './trade-view/trade-view.component';
 import { RuleListComponent } from './rule-list/rule-list.component';
 import { RuleFormComponent } from './rule-form/rule-form.component';
 import { RuleService } from './services/rule.service';
 import { FieldConfigComponent } from './field-config/field-config.component';
-import { FloatLabelModule } from 'primeng/floatlabel';
-import { DropdownModule } from 'primeng/dropdown';
-import { CardModule } from 'primeng/card';
-
-
+import { TableModule } from 'primeng/table';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+import { SelectButtonModule } from 'primeng/selectbutton';
 
 
 @NgModule({
@@ -26,7 +32,8 @@ import { CardModule } from 'primeng/card';
     AppComponent,
     RuleFormComponent,
     RuleListComponent,
-    FieldConfigComponent
+    FieldConfigComponent,
+    TradeViewComponent
   ],  // Declare AppComponent here
   imports: [
     BrowserModule,
@@ -40,9 +47,15 @@ import { CardModule } from 'primeng/card';
     InputTextModule,
     FloatLabelModule,
     DropdownModule,
-    CardModule
+    CardModule,
+    TableModule,
+    DropdownModule,
+    CommonModule,
+    FormsModule,
+    ToastModule,
+    SelectButtonModule 
   ],
-  providers:[RuleService],
+  providers:[RuleService,MessageService],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
