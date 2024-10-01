@@ -1,1 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
+
+html,body {
+    font-family: Helvetica !important;
+    font-weight: 900;
+    font-size: 14px;
+}
+
+button, input, td, tr {
+    font-family: "Open Sans", sans-serif !important;
+    font-size: 14px;
+}
