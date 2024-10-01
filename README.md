@@ -46,3 +46,16 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The appli
 ## Running unit tests
 
 Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+
+## Screenshots
+The main screen:
+
+![Main Screen](assets/Filter-Rule-Overview.png)
+
+Saving a rule
+
+![Saving Rule](assets/saving-portfolios)
+
+Notification
+
+![Notification](assets/notification-service-after-saving.png)
