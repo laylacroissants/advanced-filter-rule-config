@@ -31,3 +31,7 @@ button, input, td, tr {
     @apply inline-block rounded bg-slate-300 px-3 pb-1 pt-2 text-xs font-medium uppercase leading-normal text-primary-700 transition duration-150 ease-in-out focus:outline-none focus:ring-0 motion-reduce:transition-none;
 }
 
+.dropdown-main {
+    @apply border border-slate-300 rounded
+}
+

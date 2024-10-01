@@ -41,7 +41,8 @@ The system provides an intuitive user interface for configuring rules, applying 
 
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+1. npm install
+2. Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
 ## Running unit tests
 
@@ -54,12 +55,16 @@ The main screen:
 
 Saving a rule
 
-![Saving Rule](assets/saving-portfolios.png)
+![Saving Rule](assets/save-rule-pop-up.png)
 
-Notification
+Update/Save Notification
 
-![Notification](assets/notification-service-after-saving.png)
+![Notification](assets/update-rule-notification.png)
 
 List Of Rules Saved
 
 ![Notification](assets/list-of-rules.png)
+
+Running of Filter
+
+![Notification](assets/filter-application.png)

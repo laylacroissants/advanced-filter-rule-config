@@ -8,7 +8,7 @@
                 placeholder="Select a Rule" 
                 optionLabel="name"
                 (onChange)="onRuleSelect($event)"
-                styleClass="w-12rem border border-slate-300 rounded"
+                styleClass="w-12rem dropdown-main"
                 emptyMessage="No Rule Available. Please Create">
             </p-dropdown>
         </div>
@@ -27,7 +27,7 @@
                                     optionLabel="fieldName" 
                                     (onChange)="onFieldChange(i)"
                                     inputId="field-label"
-                                    styleClass="w-20rem border border-slate-300 rounded">
+                                    styleClass="w-20rem dropdown-main">
                                 </p-dropdown>
                             </div>
                         </div>
@@ -44,7 +44,7 @@
                                     optionValue="value"
                                     placeholder="Select Condition"
                                     [disabled]="rule.get('fieldType')?.value === 'boolean'"
-                                    styleClass="w-20rem border border-slate-300 rounded"
+                                    styleClass="w-20rem dropdown-main"
                                     inputId="condition-label">
                                 </p-dropdown>
                             </div>
