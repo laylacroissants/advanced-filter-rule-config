@@ -1,4 +1,4 @@
-import { Component, Injectable, Input, OnInit } from '@angular/core';
+import { Component, effect, Injectable, Input, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { RuleService } from '../services/rule.service';
 import { MessageService } from 'primeng/api';
@@ -60,40 +60,26 @@ export class RuleFormComponent implements OnInit {
       name: ['', Validators.required],
       rules: this.fb.array([this.createSubRule()])
     });
+
+    effect(() => {
+      const ruleList = this.ruleService.ruleList();
+      const selectedRule = this.ruleService.selectedRule();
+
+      if (selectedRule) {
+        this.ruleIndex = ruleList.findIndex(r => r === selectedRule);
+        this.selectedRule = selectedRule;
+        this.loadRule(selectedRule);
+      }
+    });
   }
 
   ngOnInit() {
     this.ruleForm.reset();
     this.ruleService.rules$.subscribe(rules => {
-      this.ruleList = rules; // Update dropdown options when new rules are saved
+      this.ruleList = rules; // subscribe to update dropdown options when new rules are saved
     });
 
-    this.ruleForm.setControl('rules', this.fb.array([this.createSubRule()]));
-    // Subscribe to the selected rule observable
-    this.ruleService.selectedRule$.subscribe(rule => {
-      if (rule) {
-        this.ruleIndex = this.ruleList.findIndex(r => r === rule); 
-        this.selectedRule = rule
-        this.ruleForm.patchValue(rule);
-
-        this.rules.clear();
-
-      // Loop through each sub-rule and add it to the form array
-        rule.rules.forEach((subRule: any) => {
-          const subRuleForm = this.fb.group({
-            field: [subRule.field, Validators.required],
-            fieldType: [{ value: subRule.field.fieldType, disabled: true }, Validators.required],
-            condition: [subRule.condition, Validators.required],
-            value: [subRule.value],
-            startValue: [subRule.startValue],
-            endValue: [subRule.endValue],
-            operator: [subRule.operator || 'AND', Validators.required]
-          });
-          this.rules.push(subRuleForm); // Add each sub-rule to the form array
-        });
-      }
-    });
-    
+    this.ruleForm.setControl('rules', this.fb.array([this.createSubRule()]));    
   }
   ngOnDestroy() {}
   
@@ -103,6 +89,23 @@ export class RuleFormComponent implements OnInit {
 
   applyFilter() {
     console.log(this.selectedRule)
+  }
+
+  loadRule(rule: Rule) {
+    this.ruleForm.patchValue({ name: rule.name });
+    this.rules.clear();
+    rule.rules.forEach((subRule: any) => {
+      const subRuleForm = this.fb.group({
+        field: [subRule.field, Validators.required],
+        fieldType: [{ value: subRule.fieldType, disabled: true }, Validators.required],
+        condition: [subRule.condition, Validators.required],
+        value: [subRule.value],
+        startValue: [subRule.startValue],
+        endValue: [subRule.endValue],
+        operator: [subRule.operator || 'AND', Validators.required]
+      });
+      this.rules.push(subRuleForm);
+    });
   }
 
   createSubRule(): FormGroup {
@@ -136,7 +139,6 @@ export class RuleFormComponent implements OnInit {
 
   saveRule() {
     if (this.ruleForm.invalid) {
-      // Prevent saving if the form is invalid
       alert('Please enter a valid rule name.');
       return;
     }
@@ -156,12 +158,14 @@ export class RuleFormComponent implements OnInit {
     if (this.ruleIndex !== null) { //update current selected rule
       this.ruleService.updateRule(this.ruleIndex, ruleFormValue);
       this.selectedRule = ruleFormValue;
+      this.ruleService.setSelectedRule(this.selectedRule)
       this.showSuccessUpdate()
       
     } else { // very first rule and new rule
       this.ruleService.saveRule(ruleFormValue);
       this.selectedRule = ruleFormValue; 
       this.ruleIndex = this.ruleList.length - 1
+      this.ruleService.setSelectedRule(this.selectedRule)
       this.showSuccessSave()
     }
     this.showSaveDialog = false;  
