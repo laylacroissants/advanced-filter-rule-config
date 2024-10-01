@@ -61,19 +61,21 @@ export class TradeViewComponent {
 
   applyFilter() {
     // Create a deep copy of the original tradeData before filtering
-    let filteredData = JSON.parse(JSON.stringify(this.originalTradeData));  // Deep copy of original data
+    let filteredData = JSON.parse(JSON.stringify(this.originalTradeData)); // Deep copy of original data
   
     if (this.selectedFilter && this.selectedFilter.rules) {
-      this.selectedFilter.rules.forEach(rule => {
-        const fieldName = rule.field.field as keyof TradeData; 
+      let hasOrOperator = false;
+      let orFilteredData: TradeData[] = [];
+  
+      this.selectedFilter.rules.forEach((rule, ruleIndex) => {
+        const fieldName = rule.field.field as keyof TradeData;
         const condition = rule.condition;
         const value = rule.value;
         const startValue = rule.startValue;
         const endValue = rule.endValue;
   
-        // Apply filter based on the field type
-        filteredData = filteredData.filter((item: TradeData) => {
-          const fieldValue = item[fieldName]; 
+        let currentFilterData: TradeData[] = filteredData.filter((item: TradeData) => {
+          const fieldValue = item[fieldName];
   
           if (typeof fieldValue === 'string') {
             if (condition === 'contains') {
@@ -85,12 +87,12 @@ export class TradeViewComponent {
             } else if (condition === 'is') {
               return fieldValue.toLowerCase() === value.toLowerCase();
             } else if (condition === 'notContains') {
-              return !fieldValue.toLowerCase().includes(value.toLowerCase());  
+              return !fieldValue.toLowerCase().includes(value.toLowerCase());
             }
           } else if (typeof fieldValue === 'number') {
             const numValue = parseFloat(value);
             const start = parseFloat(startValue);
-            const end = parseFloat(endValue); 
+            const end = parseFloat(endValue);
             if (condition === 'greaterThan') {
               return fieldValue > numValue;
             } else if (condition === 'lessThan') {
@@ -98,13 +100,29 @@ export class TradeViewComponent {
             } else if (condition === 'equals') {
               return fieldValue === numValue;
             } else if (condition === 'range') {
-              return fieldValue >= start && fieldValue <= end; 
+              return fieldValue >= start && fieldValue <= end;
             }
           }
-          return false; 
+          return false;
         });
+  
+        // Apply operator logic (AND or OR)
+        if (rule.operator === 'AND') {
+          // Keep narrowing the filteredData based on 'AND' operator
+          filteredData = currentFilterData;
+        } else if (rule.operator === 'OR') {
+          // Collect 'OR' matches but keep filteredData untouched for subsequent 'AND' filtering
+          hasOrOperator = true;
+          orFilteredData = [...orFilteredData, ...currentFilterData];
+        }
       });
+  
+      // Combine 'OR' filtered results with final 'AND' results
+      if (hasOrOperator) {
+        filteredData = [...new Set([...filteredData, ...orFilteredData])]; // Combine without duplicates
+      }
     }
+  
     this.tradeData = filteredData;
   }
 }
