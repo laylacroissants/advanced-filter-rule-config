@@ -59,3 +59,7 @@ Saving a rule
 Notification
 
 ![Notification](assets/notification-service-after-saving.png)
+
+List Of Rules Saved
+
+![Notification](assets/list-of-rules.png)
