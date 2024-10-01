@@ -8,7 +8,8 @@
                 placeholder="Select a Rule" 
                 optionLabel="name"
                 (onChange)="onRuleSelect($event)"
-                styleClass="w-12rem">
+                styleClass="w-12rem"
+                emptyMessage="No Rule Available. Please Create">
             </p-dropdown>
         </div>
         <form [formGroup]="ruleForm">

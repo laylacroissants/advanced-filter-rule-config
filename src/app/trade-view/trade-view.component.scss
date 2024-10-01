@@ -1,1 +1,21 @@
+:ng-host ::ng-deep {
+    .p-datatable-loading-overlay {
+        background-color: rgba(255, 255, 255, 0.8) !important; 
+        opacity: 1 !important;
+    }
+    
+    .p-datatable-loading-icon,
+    .custom-spinner {
+        font-size: 3rem !important; 
+        color: #28a745 !important; 
+    }
+    
+}
 
+.custom-loading-body {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 100px !important;
+    color: #007bff !important;
+  }

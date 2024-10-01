@@ -1,4 +1,4 @@
-import { Component, effect, Injectable, Input, OnInit } from '@angular/core';
+import { Component, effect, EventEmitter, Injectable, Input, OnInit, Output } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { RuleService } from '../services/rule.service';
 import { MessageService } from 'primeng/api';
@@ -21,7 +21,7 @@ export class RuleFormComponent implements OnInit {
   ruleForm: FormGroup;
   ruleIndex: number | null = null;
   showSaveDialog: boolean = false;
-  initialSelectedRule = new BehaviorSubject<any>(undefined)
+  @Output() filterApplied: EventEmitter<{ loading: boolean, filter: any }> = new EventEmitter<{ loading: boolean, filter: any }>();
 
   numberConditions = [
     { label: 'Is', value: 'is' },
@@ -87,8 +87,14 @@ export class RuleFormComponent implements OnInit {
     return this.ruleForm.get('rules') as FormArray;
   }
 
+
   applyFilter() {
-    console.log(this.selectedRule)
+    const selectedFilter = this.ruleForm.value; // Assuming ruleForm contains the selected filter
+    this.filterApplied.emit({ loading: true, filter: selectedFilter });
+
+    setTimeout(() => {
+      this.filterApplied.emit({ loading: false, filter: selectedFilter });
+    }, 2000); 
   }
 
   loadRule(rule: Rule) {
