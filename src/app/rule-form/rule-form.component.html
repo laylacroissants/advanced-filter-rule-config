@@ -1,14 +1,14 @@
 <p-toast></p-toast>
-<div class="rule-form">
-    <p-card class="rule-form-card" [style]="{ width: '75%' }">
-        <div class="rule-dropdown-list">
+<div>
+    <div class="bg-slate-100 px-4 py-3 drop-shadow">
+        <div>
             <p-dropdown 
                 [options]="ruleList" 
                 [(ngModel)]="selectedRule" 
                 placeholder="Select a Rule" 
                 optionLabel="name"
                 (onChange)="onRuleSelect($event)"
-                styleClass="w-12rem"
+                styleClass="w-12rem border border-slate-300 rounded"
                 emptyMessage="No Rule Available. Please Create">
             </p-dropdown>
         </div>
@@ -18,7 +18,7 @@
                     <div class="sub-rule-field">
                         <div class="flex flex-column pr-2">
                             <div class="flex">
-                                <label class="text-xs" for="field-label">Field</label>
+                                <label class="label-text" for="field-label">Field</label>
                             </div>
                             <div class="flex">
                                 <p-dropdown 
@@ -27,14 +27,14 @@
                                     optionLabel="fieldName" 
                                     (onChange)="onFieldChange(i)"
                                     inputId="field-label"
-                                    styleClass="w-20rem">
+                                    styleClass="w-20rem border border-slate-300 rounded">
                                 </p-dropdown>
                             </div>
                         </div>
                          
                         <div class="flex flex-column pr-2">
                             <div class="flex">
-                                <label class="text-xs" for="condition-label">Condition</label>
+                                <label class="label-text" for="condition-label">Condition</label>
                             </div>
                             <div class="flex">
                                 <p-dropdown 
@@ -44,7 +44,7 @@
                                     optionValue="value"
                                     placeholder="Select Condition"
                                     [disabled]="rule.get('fieldType')?.value === 'boolean'"
-                                    styleClass="w-20rem"
+                                    styleClass="w-20rem border border-slate-300 rounded"
                                     inputId="condition-label">
                                 </p-dropdown>
                             </div>
@@ -55,26 +55,29 @@
                             <ng-container *ngSwitchCase="'number'">
                                 <div *ngIf="rule.get('condition')?.value === 'range'" class="range-inputs">
                                   <div>
-                                    <label class="text-xs" for="startValue-label">From</label>    
+                                    <label class="label-text" for="startValue-label">From</label>    
                                     <input pInputText formControlName="startValue" inputId="startValue-label"/>
                                   </div>
                                   <div>
-                                    <label class="text-xs" for="endValue-label">To</label>
+                                    <label class="label-text" for="endValue-label">To</label>
                                     <input pInputText formControlName="endValue" inputId="endValue-label"/>
                                   </div>
                                 </div>
                                 <div *ngIf="rule.get('condition')?.value !== 'range'" class="single-input">
-                                  <label class="text-xs" for="value-label">Value</label>  
-                                  <input pInputText formControlName="value" inputId="value-label" styleClass="w-20rem" />
+                                  <label class="label-text" for="value-label">Value</label>  
+                                  <input pInputText formControlName="value" inputId="value-label" />
                                 </div>
                             </ng-container>
                           
                             <!-- Text Field Type -->
                             <div *ngSwitchCase="'text'" class="flex flex-column">   
-                                <div class="flex"><label class="text-xs" for="value-label">Value</label></div>  
-                                <div class="flex"><input pInputText 
-                                    formControlName="value"
-                                    inputId="value-label" style="width: 20rem;" />
+                                <div class="flex"><label class="label-text" for="value-label">Value</label></div>  
+                                <div class="flex">
+                                    <input
+                                        class="w-20 h-10 px-2 border border-slate-300 rounded" 
+                                        pInputText 
+                                        formControlName="value"
+                                        inputId="value-label" />
                                 </div>
                             </div>
                           
@@ -113,14 +116,14 @@
                 </div>
             </div>
             <div class="card flex flex-wrap gap-3">
-                <p-button label="Primary" label="Add Sub-rule" (click)="addSubRule()" />
-                <p-button label="Save Rule" (click)="openSaveDialog()" severity="success" />
-                <p-button label="Save As" (click)="saveAsRule()" severity="secondary" />
-                <p-button label="Delete Rule" (click)="deleteRule()" severity="danger" />
-                <p-button label="Apply Filter" (click)="applyFilter()" severity="help"/>
+                <p-button label="Save Rule" (click)="openSaveDialog()" styleClass="button-primary" />
+                <p-button label="Add Sub-rule" (click)="addSubRule()" styleClass="button-secondary" />
+                <p-button label="Save As" (click)="saveAsRule()" styleClass="button-secondary"/>
+                <p-button label="Delete Rule" (click)="deleteRule()" styleClass="button-secondary"/>
+                <p-button label="Apply Filter" (click)="applyFilter()" styleClass="button-secondary"/>
             </div>
         </form>
-    </p-card>
+    </div>
 
     <p-dialog header="Save Rule" [modal]="true" [(visible)]="showSaveDialog" [style]="{ width: '25rem' }">
         <span class="p-text-secondary block mb-5">Please Provide Rule Name.</span>
@@ -130,8 +133,8 @@
                 <input pInputText id="ruleName" formControlName="name" class="flex-auto" autocomplete="off" />
             </div>
             <div class="flex justify-content-end gap-2">
-                <p-button label="Cancel" severity="secondary" (onClick)="showSaveDialog = false" />
-                <p-button label="Save" (onClick)="saveRule()" />
+                <p-button label="Cancel" styleClass="button-secondary" (onClick)="showSaveDialog = false" />
+                <p-button label="Save" styleClass="button-secondary" (onClick)="saveRule()" />
             </div>
         </form>
     </p-dialog>

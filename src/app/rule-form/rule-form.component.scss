@@ -1,18 +1,15 @@
 :host ::ng-deep {
-    .p-card {
-        margin-right: 100px;
-    } 
     /* Target the select button wrapper */
     .p-selectbutton .p-button {
         border-radius: 20px; /* Make the buttons rounder */
-        padding: 0.4rem 1rem; /* Smaller padding for smaller buttons */
-        font-size: 0.8rem; /* Smaller text size */
-        height: auto; /* Adjust height */
-        min-width: 60px; /* Set a minimum width */
+        padding: 0.4rem 0.5rem; 
+        font-size: 0.8rem;
+        height: auto; 
+        min-width: 60px;
     }
 
     .p-selectbutton .p-button.p-highlight {
-        background-color: #007ad9; /* Custom highlight color for the selected button */
+        background-color: rgb(161 161 170); /* Custom highlight color for the selected button */
         color: white; /* White text color for the selected button */
     }
 
@@ -23,19 +20,16 @@
         border-color: #ccc;
     }
 }
-.rule-form {
-    margin: 50px 0px 0px 400px
-}
 .sub-rule-field {
     display: flex;
 }
 .range-inputs > div, .single-input {
     display: flex;
-    flex-direction: column; /* Aligns the label on top of the input */
-    margin-right: 20px; /* Adds spacing between the range inputs */
+    flex-direction: column; 
+    margin-right: 20px; 
 }
   
 .range-inputs {
     display: flex;
-    flex-direction: row; /* Positions the range inputs side by side */
+    flex-direction: row;
 }
