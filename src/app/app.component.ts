@@ -8,7 +8,6 @@ import { FieldService } from './services/field.service';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'filter-rule-config-application';
   constructor() {}
 
   ngOnInit(): void {
