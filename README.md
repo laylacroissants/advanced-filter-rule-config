@@ -35,6 +35,10 @@ The system provides an intuitive user interface for configuring rules, applying 
 4. **Reactivity**:
    - The application uses **RxJS Observables** and **Angular Signals** to ensure reactive updates to the UI whenever the user interacts with the system (e.g., adding a rule, applying a filter).
 
+### Prerequisites
+- **Node.js** and **npm** installed.
+- **Angular CLI** installed globally.
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
