@@ -54,7 +54,7 @@ The main screen:
 
 Saving a rule
 
-![Saving Rule](assets/saving-portfolios)
+![Saving Rule](assets/saving-portfolios.png)
 
 Notification
 
